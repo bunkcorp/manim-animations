@@ -211,7 +211,7 @@ class RiemannSumX3(Scene):
                 font_size=32,
                 color=GREEN
             )
-        ).arrange(DOWN, buff=0.4).to_edge(DOWN, buff=0.5)
+        ).arrange(DOWN, buff=0.4).to_corner(UR, buff=0.5).shift(DOWN * 1.5)
         
         self.play(
             Transform(convergence_text, final_text),
