@@ -212,7 +212,7 @@ class RiemannSumX3(Scene):
                 font_size=28,
                 color=RED_D
             )
-        ).arrange(DOWN, buff=0.3).next_to(axes, RIGHT, buff=0.8).align_to(axes, UP).shift(DOWN * 0.3)
+        ).arrange(DOWN, buff=0.3).next_to(axes, RIGHT, buff=0.8).align_to(subtitle, DOWN).shift(DOWN * 0.5)
         
         # Show final text above, keep convergence text below
         self.play(
