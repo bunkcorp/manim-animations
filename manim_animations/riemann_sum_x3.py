@@ -168,13 +168,13 @@ class RiemannSumX3(Scene):
         convergence_text = VGroup(
             Text(
                 "As units shrink → Parameters refined",
-                font_size=24,
+                font_size=20,
                 color=YELLOW,
                 weight=BOLD
             ),
             MathTex(
                 "\\text{Approx} \\rightarrow \\int_0^2 x^3 \\, dx = 4.0",
-                font_size=26,
+                font_size=22,
                 color=GREEN
             )
         ).arrange(DOWN, buff=0.3).next_to(prev_sum_text, DOWN, buff=0.5).align_to(prev_sum_text, LEFT)
