@@ -126,7 +126,7 @@ class RiemannSumX3(Scene):
                     font_size=20,
                     color=RED
                 )
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).to_corner(DR, buff=1.2).shift(UP * 0.5)
+            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).next_to(axes, RIGHT, buff=1.0).align_to(axes, DOWN).shift(UP * 2.0)
             
             # Smooth transition: shrink previous rectangles into new ones
             if prev_rectangles is not None:
@@ -203,15 +203,15 @@ class RiemannSumX3(Scene):
             Text(
                 "Perfect refinement achieved!",
                 font_size=30,
-                color=GREEN,
+                color=RED_D,
                 weight=BOLD
             ),
             MathTex(
                 "\\int_0^2 x^3 \\, dx = \\frac{x^4}{4} \\Big|_0^2 = \\frac{16}{4} - 0 = 4",
                 font_size=32,
-                color=GREEN
+                color=RED_D
             )
-        ).arrange(DOWN, buff=0.4).to_corner(UR, buff=0.8).shift(DOWN * 2.5 + LEFT * 0.5)
+        ).arrange(DOWN, buff=0.4).next_to(axes, RIGHT, buff=1.0).align_to(axes, UP).shift(DOWN * 0.5)
         
         self.play(
             Transform(convergence_text, final_text),
