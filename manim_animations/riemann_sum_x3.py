@@ -199,14 +199,14 @@ class RiemannSumX3(Scene):
             run_time=2
         )
         
-        # Create final text above refinement steps (don't transform from convergence_text)
+        # Create final text below the convergence text
         final_text = MathTex(
             "\\int_0^2 x^3 \\, dx = \\frac{x^4}{4} \\Big|_0^2 = \\frac{16}{4} - 0 = 4",
             font_size=28,
             color=RED_D
-        ).next_to(axes, RIGHT, buff=0.8).align_to(subtitle, DOWN).shift(DOWN * 0.5)
+        ).next_to(convergence_text, DOWN, buff=0.4).align_to(convergence_text, LEFT)
         
-        # Show final text above, keep convergence text below
+        # Show final text below convergence text
         self.play(
             FadeIn(final_text),
             run_time=2
