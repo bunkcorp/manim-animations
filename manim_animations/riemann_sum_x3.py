@@ -126,7 +126,7 @@ class RiemannSumX3(Scene):
                     font_size=20,
                     color=RED
                 )
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).to_corner(DR, buff=0.8)
+            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).to_corner(DR, buff=1.2).shift(UP * 0.5)
             
             # Smooth transition: shrink previous rectangles into new ones
             if prev_rectangles is not None:
@@ -211,7 +211,7 @@ class RiemannSumX3(Scene):
                 font_size=32,
                 color=GREEN
             )
-        ).arrange(DOWN, buff=0.4).to_corner(UR, buff=0.5).shift(DOWN * 1.5)
+        ).arrange(DOWN, buff=0.4).to_corner(UR, buff=0.8).shift(DOWN * 2.5 + LEFT * 0.5)
         
         self.play(
             Transform(convergence_text, final_text),
