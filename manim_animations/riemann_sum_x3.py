@@ -164,20 +164,20 @@ class RiemannSumX3(Scene):
             prev_rectangles = rectangles
             prev_sum_text = sum_text
         
-        # Show convergence message
+        # Show convergence message below the refinement steps
         convergence_text = VGroup(
             Text(
                 "As units shrink → Parameters refined",
-                font_size=30,
+                font_size=24,
                 color=YELLOW,
                 weight=BOLD
             ),
             MathTex(
                 "\\text{Approx} \\rightarrow \\int_0^2 x^3 \\, dx = 4.0",
-                font_size=32,
+                font_size=26,
                 color=GREEN
             )
-        ).arrange(DOWN, buff=0.4).to_edge(DOWN, buff=0.6)
+        ).arrange(DOWN, buff=0.3).next_to(prev_sum_text, DOWN, buff=0.5).align_to(prev_sum_text, LEFT)
         
         self.play(
             Write(convergence_text),
