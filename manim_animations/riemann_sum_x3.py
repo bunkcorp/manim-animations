@@ -130,10 +130,14 @@ class RiemannSumX3(Scene):
             
             # Smooth transition: shrink previous rectangles into new ones
             if prev_rectangles is not None:
-                # Animate shrinking and transforming
+                # Fade out old text first, then transform rectangles and show new text
+                self.play(
+                    FadeOut(prev_sum_text),
+                    run_time=0.3
+                )
                 self.play(
                     Transform(prev_rectangles, rectangles, run_time=1.5),
-                    Transform(prev_sum_text, sum_text, run_time=1.5),
+                    FadeIn(sum_text),
                     run_time=1.5
                 )
             else:
@@ -164,16 +168,16 @@ class RiemannSumX3(Scene):
         convergence_text = VGroup(
             Text(
                 "As units shrink → Parameters refined",
-                font_size=32,
+                font_size=30,
                 color=YELLOW,
                 weight=BOLD
             ),
             MathTex(
-                "\\text{{Approximation}} \\rightarrow \\int_0^2 x^3 \\, dx = 4.0",
-                font_size=36,
+                "\\text{Approx} \\rightarrow \\int_0^2 x^3 \\, dx = 4.0",
+                font_size=32,
                 color=GREEN
             )
-        ).arrange(DOWN, buff=0.5).to_edge(DOWN, buff=0.5)
+        ).arrange(DOWN, buff=0.4).to_edge(DOWN, buff=0.6)
         
         self.play(
             Write(convergence_text),
