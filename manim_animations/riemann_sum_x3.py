@@ -3,10 +3,9 @@ import numpy as np
 
 class RiemannSumX3(Scene):
     def construct(self):
-        # Configuration
+        # Configuration - more steps to show gradual refinement
         x_min, x_max = 0, 2
-        n_rectangles_start = 4
-        n_rectangles_end = 20
+        n_values = [4, 8, 16, 32, 64]  # More steps showing gradual refinement
         
         # Create axes
         axes = Axes(
@@ -34,32 +33,33 @@ class RiemannSumX3(Scene):
         curve = axes.plot(f, x_range=[0, 2], color=GREEN, stroke_width=3)
         curve_label = MathTex("f(x) = x^3", color=GREEN, font_size=36).to_corner(UR)
         
-        # Title
-        title = Text("Riemann Sum for ∫x³ dx", font_size=42, color=YELLOW).to_edge(UP)
+        # Title - emphasize parameter tuning
+        title = Text("Refining Parameters: ∫x³ dx", font_size=42, color=YELLOW).to_edge(UP)
+        subtitle = Text("Smaller units → Better approximation", font_size=28, color=GRAY).next_to(title, DOWN)
         
         self.play(
             Create(axes),
             Write(x_label),
             Write(y_label),
-            Write(title)
+            Write(title),
+            Write(subtitle)
         )
         self.wait(0.5)
         
         self.play(Create(curve), Write(curve_label))
         self.wait(1)
         
-        # Animation: Show increasing number of rectangles
-        for n in [n_rectangles_start, 8, 12, n_rectangles_end]:
-            # Clear previous rectangles
-            if n != n_rectangles_start:
-                self.play(FadeOut(rectangles_group), FadeOut(sum_text))
-            
-            # Calculate rectangle width
+        # Store previous rectangles for smooth transition
+        prev_rectangles = None
+        prev_sum_text = None
+        
+        # Animation: Show rectangles shrinking as we refine
+        for idx, n in enumerate(n_values):
+            # Calculate rectangle width (gets smaller each iteration)
             dx = (x_max - x_min) / n
             
             # Create rectangles (right endpoint method)
             rectangles = VGroup()
-            rectangles_group = VGroup()
             
             for i in range(n):
                 x_left = x_min + i * dx
@@ -69,13 +69,14 @@ class RiemannSumX3(Scene):
                 # Height at right endpoint
                 height = f(x_right)
                 
-                # Create rectangle
+                # Create rectangle - smaller stroke for smaller rectangles
+                stroke_width = max(1, 3 - idx * 0.4)
                 rect = Rectangle(
                     width=axes.x_axis.unit_size * dx,
                     height=axes.y_axis.unit_size * height,
                     color=BLUE,
-                    fill_opacity=0.5,
-                    stroke_width=2,
+                    fill_opacity=0.6 - idx * 0.08,  # Slightly more transparent as they shrink
+                    stroke_width=stroke_width,
                 )
                 
                 # Position rectangle
@@ -85,55 +86,102 @@ class RiemannSumX3(Scene):
                 
                 rectangles.add(rect)
             
-            rectangles_group.add(rectangles)
-            
             # Calculate Riemann sum
             riemann_sum = sum([f(x_min + (i + 1) * dx) * dx for i in range(n)])
             exact_integral = (x_max ** 4) / 4 - (x_min ** 4) / 4  # ∫x³ dx = x⁴/4
+            error = abs(riemann_sum - exact_integral)
             
-            # Display Riemann sum
+            # Display information with emphasis on refinement
+            unit_size_text = f"Unit size: {dx:.4f}" if dx >= 0.01 else f"Unit size: {dx:.6f}"
+            
             sum_text = VGroup(
-                MathTex(
-                    f"n = {n}",
-                    font_size=32,
+                Text(
+                    f"Refinement Step {idx + 1}",
+                    font_size=28,
+                    color=YELLOW,
+                    weight=BOLD
+                ),
+                Text(
+                    f"Units: {n}",
+                    font_size=24,
                     color=WHITE
                 ),
-                MathTex(
-                    f"R_n = {riemann_sum:.4f}",
-                    font_size=32,
+                Text(
+                    unit_size_text,
+                    font_size=24,
                     color=BLUE
                 ),
                 MathTex(
-                    f"\\int_0^2 x^3 \\, dx = {exact_integral:.4f}",
-                    font_size=32,
+                    f"\\text{{Approximation}} = {riemann_sum:.6f}",
+                    font_size=28,
+                    color=BLUE
+                ),
+                MathTex(
+                    f"\\text{{Exact Value}} = {exact_integral:.6f}",
+                    font_size=28,
                     color=GREEN
                 ),
                 MathTex(
-                    f"Error = {abs(riemann_sum - exact_integral):.4f}",
-                    font_size=28,
+                    f"\\text{{Error}} = {error:.6f}",
+                    font_size=24,
                     color=RED
                 )
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).to_corner(DR, buff=0.5)
+            ).arrange(DOWN, aligned_edge=LEFT, buff=0.2).to_corner(DR, buff=0.5)
             
-            # Animate rectangles appearing
-            self.play(
-                *[Create(rect) for rect in rectangles],
-                Write(sum_text),
-                run_time=2
-            )
+            # Smooth transition: shrink previous rectangles into new ones
+            if prev_rectangles is not None:
+                # Animate shrinking and transforming
+                self.play(
+                    Transform(prev_rectangles, rectangles, run_time=1.5),
+                    Transform(prev_sum_text, sum_text, run_time=1.5),
+                    run_time=1.5
+                )
+            else:
+                # First iteration - create rectangles
+                self.play(
+                    *[Create(rect) for rect in rectangles],
+                    Write(sum_text),
+                    run_time=2
+                )
+            
+            # Highlight that rectangles are getting smaller
+            if idx < len(n_values) - 1:
+                shrink_indicator = Text(
+                    "↓ Refining parameters...",
+                    font_size=24,
+                    color=YELLOW
+                ).next_to(sum_text, DOWN, buff=0.3)
+                self.play(Write(shrink_indicator), run_time=0.8)
+                self.play(FadeOut(shrink_indicator), run_time=0.5)
+            
             self.wait(1)
+            
+            # Store for next iteration
+            prev_rectangles = rectangles
+            prev_sum_text = sum_text
         
-        # Show convergence
-        convergence_text = Text(
-            "As n → ∞, R_n → ∫x³ dx = 4.0",
-            font_size=36,
-            color=YELLOW
-        ).to_edge(DOWN, buff=0.5)
+        # Show convergence message
+        convergence_text = VGroup(
+            Text(
+                "As units shrink → Parameters refined",
+                font_size=32,
+                color=YELLOW,
+                weight=BOLD
+            ),
+            MathTex(
+                "\\text{{Approximation}} \\rightarrow \\int_0^2 x^3 \\, dx = 4.0",
+                font_size=36,
+                color=GREEN
+            )
+        ).arrange(DOWN, buff=0.5).to_edge(DOWN, buff=0.5)
         
-        self.play(Write(convergence_text))
+        self.play(
+            Write(convergence_text),
+            run_time=2
+        )
         self.wait(2)
         
-        # Highlight the exact area
+        # Highlight the exact area - show what we're converging to
         area_under_curve = axes.get_area(
             curve,
             x_range=[0, 2],
@@ -142,16 +190,24 @@ class RiemannSumX3(Scene):
         )
         
         self.play(
-            FadeOut(rectangles_group),
+            FadeOut(prev_rectangles),
             Create(area_under_curve),
             run_time=2
         )
         
-        final_text = MathTex(
-            "\\int_0^2 x^3 \\, dx = \\frac{x^4}{4} \\Big|_0^2 = \\frac{16}{4} - 0 = 4",
-            font_size=40,
-            color=GREEN
-        ).to_edge(DOWN, buff=0.3)
+        final_text = VGroup(
+            Text(
+                "Perfect refinement achieved!",
+                font_size=32,
+                color=GREEN,
+                weight=BOLD
+            ),
+            MathTex(
+                "\\int_0^2 x^3 \\, dx = \\frac{x^4}{4} \\Big|_0^2 = \\frac{16}{4} - 0 = 4",
+                font_size=36,
+                color=GREEN
+            )
+        ).arrange(DOWN, buff=0.3).to_edge(DOWN, buff=0.3)
         
         self.play(
             Transform(convergence_text, final_text),
