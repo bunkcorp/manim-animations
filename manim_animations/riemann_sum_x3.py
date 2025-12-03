@@ -7,19 +7,19 @@ class RiemannSumX3(Scene):
         x_min, x_max = 0, 2
         n_values = [4, 8, 16, 32, 64]  # More steps showing gradual refinement
         
-        # Create axes
+        # Create axes - smaller to make room for text on the right
         axes = Axes(
             x_range=[0, 2.5, 0.5],
             y_range=[0, 9, 1],
-            x_length=10,
-            y_length=6,
+            x_length=7,
+            y_length=5,
             axis_config={
                 "color": BLUE,
                 "include_numbers": True,
-                "font_size": 24,
+                "font_size": 20,
             },
             tips=False,
-        ).to_edge(LEFT).shift(RIGHT * 0.5)
+        ).to_edge(LEFT, buff=0.5).shift(RIGHT * 0.3)
         
         # Labels
         x_label = axes.get_x_axis_label("x", direction=DOWN)
@@ -126,7 +126,7 @@ class RiemannSumX3(Scene):
                     font_size=20,
                     color=RED
                 )
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).next_to(axes, RIGHT, buff=1.0).align_to(axes, DOWN).shift(UP * 2.0)
+            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).next_to(axes, RIGHT, buff=0.8).align_to(axes, DOWN).shift(UP * 1.8)
             
             # Smooth transition: shrink previous rectangles into new ones
             if prev_rectangles is not None:
@@ -202,16 +202,16 @@ class RiemannSumX3(Scene):
         final_text = VGroup(
             Text(
                 "Perfect refinement achieved!",
-                font_size=30,
+                font_size=28,
                 color=RED_D,
                 weight=BOLD
             ),
             MathTex(
                 "\\int_0^2 x^3 \\, dx = \\frac{x^4}{4} \\Big|_0^2 = \\frac{16}{4} - 0 = 4",
-                font_size=32,
+                font_size=28,
                 color=RED_D
             )
-        ).arrange(DOWN, buff=0.4).next_to(axes, RIGHT, buff=1.0).align_to(axes, UP).shift(DOWN * 0.5)
+        ).arrange(DOWN, buff=0.3).next_to(axes, RIGHT, buff=0.8).align_to(axes, UP).shift(DOWN * 0.3)
         
         self.play(
             Transform(convergence_text, final_text),
