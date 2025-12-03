@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Manim outputs
+*.mp4
+*.png
+*.svg
+!manim-mcp-server/src/media/manim_tmp/media/videos/scene/1080p60/*.mp4
+!manim-mcp-server/Demo-manim-mcp.gif
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+
