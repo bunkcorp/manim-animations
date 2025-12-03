@@ -34,8 +34,8 @@ class RiemannSumX3(Scene):
         curve_label = MathTex("f(x) = x^3", color=GREEN, font_size=36).to_corner(UR)
         
         # Title - emphasize parameter tuning
-        title = Text("Refining Parameters: ∫x³ dx", font_size=42, color=YELLOW).to_edge(UP)
-        subtitle = Text("Smaller units → Better approximation", font_size=28, color=GRAY).next_to(title, DOWN)
+        title = Text("Refining Parameters: ∫x³ dx", font_size=38, color=YELLOW).to_edge(UP, buff=0.3)
+        subtitle = Text("Smaller units → Better approximation", font_size=24, color=GRAY).next_to(title, DOWN, buff=0.2)
         
         self.play(
             Create(axes),
@@ -97,36 +97,36 @@ class RiemannSumX3(Scene):
             sum_text = VGroup(
                 Text(
                     f"Refinement Step {idx + 1}",
-                    font_size=28,
+                    font_size=26,
                     color=YELLOW,
                     weight=BOLD
                 ),
                 Text(
                     f"Units: {n}",
-                    font_size=24,
+                    font_size=22,
                     color=WHITE
                 ),
                 Text(
                     unit_size_text,
+                    font_size=20,
+                    color=BLUE
+                ),
+                MathTex(
+                    f"\\text{{Approx}} = {riemann_sum:.6f}",
                     font_size=24,
                     color=BLUE
                 ),
                 MathTex(
-                    f"\\text{{Approximation}} = {riemann_sum:.6f}",
-                    font_size=28,
-                    color=BLUE
-                ),
-                MathTex(
-                    f"\\text{{Exact Value}} = {exact_integral:.6f}",
-                    font_size=28,
+                    f"\\text{{Exact}} = {exact_integral:.6f}",
+                    font_size=24,
                     color=GREEN
                 ),
                 MathTex(
                     f"\\text{{Error}} = {error:.6f}",
-                    font_size=24,
+                    font_size=20,
                     color=RED
                 )
-            ).arrange(DOWN, aligned_edge=LEFT, buff=0.2).to_corner(DR, buff=0.5)
+            ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).to_corner(DR, buff=0.8)
             
             # Smooth transition: shrink previous rectangles into new ones
             if prev_rectangles is not None:
@@ -148,9 +148,9 @@ class RiemannSumX3(Scene):
             if idx < len(n_values) - 1:
                 shrink_indicator = Text(
                     "↓ Refining parameters...",
-                    font_size=24,
+                    font_size=22,
                     color=YELLOW
-                ).next_to(sum_text, DOWN, buff=0.3)
+                ).next_to(sum_text, DOWN, buff=0.5)
                 self.play(Write(shrink_indicator), run_time=0.8)
                 self.play(FadeOut(shrink_indicator), run_time=0.5)
             
@@ -198,16 +198,16 @@ class RiemannSumX3(Scene):
         final_text = VGroup(
             Text(
                 "Perfect refinement achieved!",
-                font_size=32,
+                font_size=30,
                 color=GREEN,
                 weight=BOLD
             ),
             MathTex(
                 "\\int_0^2 x^3 \\, dx = \\frac{x^4}{4} \\Big|_0^2 = \\frac{16}{4} - 0 = 4",
-                font_size=36,
+                font_size=32,
                 color=GREEN
             )
-        ).arrange(DOWN, buff=0.3).to_edge(DOWN, buff=0.3)
+        ).arrange(DOWN, buff=0.4).to_edge(DOWN, buff=0.5)
         
         self.play(
             Transform(convergence_text, final_text),
