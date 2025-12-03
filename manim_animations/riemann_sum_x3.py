@@ -199,6 +199,7 @@ class RiemannSumX3(Scene):
             run_time=2
         )
         
+        # Create final text above refinement steps (don't transform from convergence_text)
         final_text = VGroup(
             Text(
                 "Perfect refinement achieved!",
@@ -213,8 +214,9 @@ class RiemannSumX3(Scene):
             )
         ).arrange(DOWN, buff=0.3).next_to(axes, RIGHT, buff=0.8).align_to(axes, UP).shift(DOWN * 0.3)
         
+        # Show final text above, keep convergence text below
         self.play(
-            Transform(convergence_text, final_text),
+            FadeIn(final_text),
             run_time=2
         )
         self.wait(3)
